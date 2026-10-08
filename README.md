@@ -1,4 +1,4 @@
-# Pokédex Gen 1-3 (Open) – Lively Wallpaper
+# Pokédex Gen 1-3 – Lively Wallpaper
 
 An animated Pokédex wallpaper for [Lively Wallpaper](https://www.rocksdanister.com/lively/) featuring all 386 Pokémon from generations 1–3.
 
