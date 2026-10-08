@@ -1,6 +1,8 @@
 # Pokédex Gen 1-3 (Open) – Lively Wallpaper
 
 An animated Pokédex wallpaper for [Lively Wallpaper](https://www.rocksdanister.com/lively/) featuring all 386 Pokémon from generations 1–3.
+![Screenshot of the Pokédex wallpaper](docs/screenshot.png)
+
 
 ## Installation
 1. Download this repo as a ZIP (Code → Download ZIP).
