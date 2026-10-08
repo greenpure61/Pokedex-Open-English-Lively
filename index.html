@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pokédex Wallpaper</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;user-select:none;-webkit-user-select:none}
+  body{font-family:"Segoe UI",Tahoma,system-ui,sans-serif;background:#070b12;--tc:#5fae3c}
+  /* ---------- animated backdrop ---------- */
+  #bg{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+  #bg .base{position:absolute;inset:0;background:
+      radial-gradient(ellipse 95% 85% at 50% 50%,color-mix(in srgb,var(--tc) 45%,transparent) 0%,transparent 72%),
+      radial-gradient(ellipse at 15% 10%,#1b2a44 0%,transparent 55%),
+      radial-gradient(ellipse at 85% 95%,#2a1430 0%,transparent 55%),
+      linear-gradient(160deg,#0c1424 0%,#070b12 60%,#0a0710 100%);transition:background .8s}
+  #bg .hex{position:absolute;inset:-60px;opacity:.16;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 0 L56 16.2 V48.5 L28 64.7 L0 48.5 V16.2 Z M28 64.7 V97 M0 97 V80.8 L28 64.7 L56 80.8 V97' fill='none' stroke='%23a8d8ff' stroke-width='1'/%3E%3C/svg%3E");
+      background-size:56px 97px;animation:drift 60s linear infinite;
+      -webkit-mask-image:radial-gradient(ellipse 75% 70% at 50% 50%,transparent 25%,#000 75%);
+              mask-image:radial-gradient(ellipse 75% 70% at 50% 50%,transparent 25%,#000 75%)}
+  @keyframes drift{to{transform:translate(56px,97px)}}
+  #bg .ring{position:absolute;left:50%;top:50%;border-radius:50%;border:2px dashed color-mix(in srgb,var(--tc) 55%,#fff 10%);
+      opacity:.28;transform:translate(-50%,-50%);transition:border-color .8s}
+  #bg .r1{width:115vmax;height:115vmax;animation:spin 140s linear infinite}
+  #bg .r2{width:88vmax;height:88vmax;border-style:dotted;border-width:3px;opacity:.22;animation:spin 90s linear infinite reverse}
+  #bg .r3{width:142vmax;height:142vmax;border:1px solid color-mix(in srgb,var(--tc) 40%,#fff 20%);opacity:.12}
+  @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+  #bg .scan{position:absolute;left:0;right:0;height:22vh;top:-25vh;
+      background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--tc) 22%,transparent) 85%,color-mix(in srgb,var(--tc) 55%,#fff 20%) 100%);
+      opacity:.35;animation:scan 9s cubic-bezier(.45,0,.55,1) infinite}
+  @keyframes scan{0%{transform:translateY(0)}70%,100%{transform:translateY(130vh)}}
+  #bg canvas{position:absolute;inset:0;width:100%;height:100%}
+  #bg .side{position:absolute;top:50%;transform:translateY(-50%);writing-mode:vertical-rl;font:900 13vh/1 "Segoe UI",sans-serif;
+      letter-spacing:.06em;color:transparent;-webkit-text-stroke:1.5px color-mix(in srgb,var(--tc) 60%,#fff 25%);opacity:.22;white-space:nowrap;transition:-webkit-text-stroke-color .8s}
+  #bg .sideL{left:1.2vw;transform:translateY(-50%) rotate(180deg)} #bg .sideR{right:1.2vw}
+  #bg .vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(0,0,0,.65) 100%)}
+  body.still #bg *{animation:none!important}
+  #stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  #wrap{position:relative}
+  /* the device is laid out in the image's own 1345×960 pixel space, then scaled to fit */
+  #dev{position:absolute;left:0;top:0;width:1345px;height:960px;transform-origin:0 0;will-change:transform;
+       background:url(device.svg) 0 0/1345px 960px no-repeat;
+       filter:drop-shadow(0 2px 1px rgba(0,0,0,.6)) drop-shadow(0 22px 36px rgba(0,0,0,.6)) drop-shadow(0 0 60px color-mix(in srgb,var(--tc) 30%,transparent))}
+  /* ---------- realism layers (masked to the device's shape) ---------- */
+  .m{position:absolute;inset:0;pointer-events:none;-webkit-mask:url(mask.png) 0 0/1345px 960px no-repeat;mask:url(mask.png) 0 0/1345px 960px no-repeat}
+  #shade{background:
+      radial-gradient(ellipse 55% 45% at 22% 12%,rgba(255,255,255,.22),transparent 70%),
+      radial-gradient(ellipse 50% 40% at 72% 30%,rgba(255,255,255,.12),transparent 70%),
+      linear-gradient(165deg,rgba(255,255,255,.10) 0%,transparent 35%,transparent 60%,rgba(0,0,0,.32) 100%)}
+  #grain{opacity:.22;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  #rim{box-shadow:inset 0 0 0 2px rgba(255,255,255,.08)}
+  #spine{position:absolute;left:651px;top:44px;width:88px;height:908px;pointer-events:none;border-radius:6px;
+      background:linear-gradient(90deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,.05) 12%,rgba(255,255,255,.38) 30%,rgba(255,255,255,.08) 48%,rgba(0,0,0,.08) 70%,rgba(0,0,0,.38) 100%);mix-blend-mode:hard-light;opacity:.8}
+  .gloss{position:absolute;pointer-events:none;z-index:3;overflow:hidden;
+      box-shadow:inset 0 3px 8px rgba(0,0,0,.45),inset 0 -1px 0 rgba(255,255,255,.15)}
+  .gloss::before{content:"";position:absolute;inset:0;
+      background:linear-gradient(158deg,rgba(255,255,255,.26) 0%,rgba(255,255,255,.07) 34%,transparent 34.5%,transparent 100%)}
+  .knob{position:absolute;pointer-events:none;border-radius:50%;z-index:3}
+  .knob.dome{background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.75) 0%,rgba(255,255,255,.18) 18%,transparent 40%),
+      radial-gradient(circle at 50% 50%,transparent 58%,rgba(0,0,0,.35) 100%)}
+  .knob.flat{background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.32),transparent 55%),radial-gradient(circle,transparent 60%,rgba(0,0,0,.4) 100%)}
+  .pill{position:absolute;pointer-events:none;border-radius:13px;z-index:3;
+      background:linear-gradient(180deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.08) 45%,rgba(0,0,0,.2) 100%)}
+  #dpadfx{position:absolute;left:450px;top:698px;width:159px;height:154px;pointer-events:none;z-index:3;
+      clip-path:polygon(33.3% 0,68.5% 0,68.5% 31%,100% 31%,100% 66%,68.5% 66%,68.5% 100%,33.3% 100%,33.3% 66%,0 66%,0 31%,33.3% 31%);
+      background:linear-gradient(140deg,rgba(255,255,255,.28) 0%,rgba(255,255,255,.05) 40%,rgba(0,0,0,.25) 100%)}
+  .hot{position:absolute;cursor:pointer;border-radius:50%;transition:filter .12s, transform .08s}
+  .hot:hover{filter:brightness(1.3);background:rgba(255,255,255,.12)}
+  .hot:active{transform:scale(.93)}
+  .mono{font-family:Consolas,"Courier New",monospace}
+
+  /* ---------- left: picture screen ---------- */
+  #pic{position:absolute;left:141px;top:288px;width:424px;height:284px;border-radius:12px;overflow:hidden;
+       background:radial-gradient(ellipse at 50% 60%,#f3fbff 0%,#cfe6f2 55%,#9cc5dc 100%);border:2px solid #222}
+  #pic::after{content:"";position:absolute;inset:0;pointer-events:none;
+       background:repeating-linear-gradient(0deg,rgba(0,0,0,.035) 0 1px,transparent 1px 3px),
+                  linear-gradient(160deg,rgba(255,255,255,.35),transparent 35%)}
+  #pic img{position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px);object-fit:contain;
+       image-rendering:auto;filter:drop-shadow(0 6px 6px rgba(0,0,0,.25))}
+  #pic img.pixel{image-rendering:pixelated}
+  #ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#26465c}
+  #ph .orb{width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+           font:800 64px/1 "Segoe UI",sans-serif;color:rgba(255,255,255,.95);box-shadow:inset 0 -10px 20px rgba(0,0,0,.25),0 6px 14px rgba(0,0,0,.2)}
+  #ph .tip{font-size:12px;opacity:.7}
+  #picno{position:absolute;left:10px;top:6px;font:700 15px Consolas,monospace;color:#26465c;z-index:2}
+
+  /* left green screen */
+  #lcd2{position:absolute;left:180px;top:790px;width:215px;height:98px;border-radius:6px;
+        color:#123d26;display:flex;flex-direction:column;justify-content:center;padding:0 12px;overflow:hidden}
+  #lcd2 .a{font:700 14px Consolas,monospace;opacity:.75}
+  #lcd2 .b{font:800 22px/1.15 "Segoe UI",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #lcd2 .c{font-size:11px;opacity:.75;white-space:nowrap}
+
+  /* ---------- right: info screen ---------- */
+  .dark{position:absolute;color:#bff5e0;background:#0b3f39;overflow:hidden}
+  .dark::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.12) 0 1px,transparent 1px 3px)}
+  #info{left:815px;top:316px;width:426px;height:153px;border-radius:9px;padding:9px 13px}
+  #info .hd{display:flex;align-items:baseline;gap:8px;border-bottom:1px solid rgba(191,245,224,.35);padding-bottom:3px;margin-bottom:5px}
+  #info .hd .n{font-weight:800;font-size:16px;color:#e8fff6}
+  #info .hd .g{font-size:11px;font-style:italic;opacity:.75}
+  #info .hd .pg{margin-left:auto;font-size:10px;letter-spacing:.08em;opacity:.7}
+  #info .tx{font-size:13px;line-height:1.38;text-wrap:pretty}
+  #info .lk{cursor:pointer;color:#fff;text-decoration:underline;text-underline-offset:2px;font-weight:700}
+  #info .ev{display:grid;grid-template-columns:1fr;gap:3px;font-size:12.5px;line-height:1.3}
+  #info .ev.many{grid-template-columns:1fr 1fr;gap:3px 10px;font-size:10.2px;line-height:1.22}
+
+  /* blue stat grid: 5×2 cells */
+  #grid{position:absolute;left:820px;top:506px;width:420px;height:120px;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:1fr 1fr}
+  #grid div{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#073848;line-height:1.05}
+  #grid small{font-size:10px;font-weight:700;letter-spacing:.04em;opacity:.8}
+  #grid b{font:800 19px Consolas,monospace}
+  #grid b.s{font-size:15px}
+
+  /* white type keys */
+  #types{position:absolute;left:819px;top:686px;width:172px;height:58px;display:grid;grid-template-columns:1fr 1fr}
+  #types div{display:flex;align-items:center;justify-content:center}
+  #types span{font-weight:800;font-size:12.5px;color:#fff;padding:3px 9px;border-radius:12px;text-shadow:0 1px 0 rgba(0,0,0,.3)}
+
+  #gen{left:815px;top:808px;width:196px;height:66px;border-radius:7px;display:flex;flex-direction:column;justify-content:center;padding:0 12px}
+  #ab{left:1047px;top:808px;width:194px;height:66px;border-radius:7px;display:flex;flex-direction:column;justify-content:center;padding:0 12px}
+  #gen .t,#ab .t{font-size:9.5px;letter-spacing:.1em;opacity:.65}
+  #gen .v,#ab .v{font-size:13px;font-weight:700;color:#e8fff6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #ab .h{font-size:10.5px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  /* lights */
+  .led{position:absolute;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .3s}
+  .led.on{opacity:1;animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{50%{filter:brightness(1.5)}}
+  #lens-glow{position:absolute;left:80px;top:17px;width:136px;height:136px;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .2s;
+             background:radial-gradient(circle at 40% 35%,rgba(230,255,255,.95),rgba(90,230,255,.35) 45%,transparent 70%)}
+  #lens-glow.on{opacity:1}
+  #auto-dot{position:absolute;left:181px;top:596px;width:48px;height:48px;border-radius:50%;pointer-events:none;opacity:0;
+            box-shadow:0 0 16px 6px rgba(255,70,70,.85)}
+  #auto-dot.on{opacity:1;animation:pulse 1.6s infinite}
+</style>
+</head>
+<body>
+<div id="bg"><div class="base"></div><div class="hex"></div>
+  <div class="ring r3"></div><div class="ring r1"></div><div class="ring r2"></div>
+  <canvas id="fx"></canvas><div class="scan"></div>
+  <div class="side sideL" id="sideL"></div><div class="side sideR" id="sideR"></div><div class="vig"></div></div>
+<div id="stage"><div id="wrap"><div id="dev">
+  <div class="m" id="shade"></div><div class="m" id="grain"></div><div id="spine"></div>
+  <div class="knob dome" style="left:93px;top:30px;width:110px;height:110px"></div>
+  <div class="knob flat" style="left:91px;top:676px;width:84px;height:84px"></div>
+  <div class="knob dome" style="left:1191px;top:707px;width:50px;height:50px"></div>
+  <div class="knob dome" style="left:181px;top:596px;width:48px;height:48px;opacity:.8"></div>
+  <div class="pill" style="left:203px;top:706px;width:94px;height:22px"></div>
+  <div class="pill" style="left:328px;top:706px;width:94px;height:22px"></div>
+  <div class="pill" style="left:1080px;top:648px;width:75px;height:16px;opacity:.6"></div>
+  <div class="pill" style="left:1163px;top:648px;width:75px;height:16px;opacity:.6"></div>
+  <div class="pill" style="left:819px;top:686px;width:172px;height:58px;border-radius:4px;opacity:.6"></div>
+
+  <div id="lens-glow"></div>
+  <div class="led" id="led1" style="left:224px;top:22px;width:35px;height:35px;box-shadow:0 0 16px 6px rgba(255,40,40,.85)"></div>
+  <div class="led" id="led2" style="left:281px;top:22px;width:35px;height:35px;box-shadow:0 0 16px 6px rgba(255,235,40,.85)"></div>
+  <div class="led" id="led3" style="left:336px;top:22px;width:35px;height:35px;box-shadow:0 0 16px 6px rgba(90,240,70,.85)"></div>
+  <div id="auto-dot"></div>
+
+  <div id="pic"><span id="picno"></span><div id="ph"></div><img id="img" alt=""></div>
+  <div id="lcd2"></div>
+
+  <div class="dark" id="info"></div>
+  <div id="grid"></div>
+  <div id="types"></div>
+  <div class="dark" id="gen"></div>
+  <div class="dark" id="ab"></div>
+
+  <!-- hot-spots over the drawn buttons -->
+  <div class="hot" id="b-lens" title="Random Pokémon" style="left:80px;top:17px;width:136px;height:136px"></div>
+  <div class="hot" id="b-g1" title="Gen 1 (Kanto)" style="left:224px;top:22px;width:35px;height:35px"></div>
+  <div class="hot" id="b-g2" title="Gen 2 (Johto)" style="left:281px;top:22px;width:35px;height:35px"></div>
+  <div class="hot" id="b-g3" title="Gen 3 (Hoenn)" style="left:336px;top:22px;width:35px;height:35px"></div>
+  <div class="hot" id="b-auto" title="Toggle autoplay" style="left:181px;top:596px;width:48px;height:48px"></div>
+  <div class="hot" id="b-a" title="Switch page" style="left:92px;top:678px;width:82px;height:82px"></div>
+  <div class="hot" id="b-red" title="Previous generation" style="left:201px;top:704px;width:98px;height:26px;border-radius:13px"></div>
+  <div class="hot" id="b-blue" title="Next generation" style="left:326px;top:704px;width:98px;height:26px;border-radius:13px"></div>
+  <div class="hot" id="b-up" title="Back 10" style="left:503px;top:698px;width:54px;height:48px;border-radius:4px"></div>
+  <div class="hot" id="b-down" title="Forward 10" style="left:503px;top:800px;width:54px;height:52px;border-radius:4px"></div>
+  <div class="hot" id="b-left" title="Previous" style="left:450px;top:746px;width:54px;height:54px;border-radius:4px"></div>
+  <div class="hot" id="b-right" title="Next" style="left:557px;top:746px;width:52px;height:54px;border-radius:4px"></div>
+  <div class="hot" id="b-mid" title="Random" style="left:515px;top:757px;width:32px;height:32px"></div>
+  <div class="hot" id="b-p1" title="Previous page" style="left:1078px;top:646px;width:80px;height:20px;border-radius:10px"></div>
+  <div class="hot" id="b-p2" title="Next page" style="left:1161px;top:646px;width:80px;height:20px;border-radius:10px"></div>
+  <div class="hot" id="b-yel" title="Random Pokémon" style="left:1190px;top:706px;width:52px;height:52px"></div>
+</div></div></div>
+
+<script src="data.js"></script>
+<script>
+const TYPES={normal:["Normal","#9a9a78"],fire:["Fire","#e8692a"],water:["Water","#4f7fe8"],grass:["Grass","#5fae3c"],
+ electric:["Electric","#d0a810"],ice:["Ice","#4fb0b0"],fighting:["Fighting","#b02e26"],poison:["Poison","#93399a"],
+ ground:["Ground","#c09640"],flying:["Flying","#8f7fe0"],psychic:["Psychic","#e8507a"],bug:["Bug","#8c9a14"],
+ rock:["Rock","#a8902e"],ghost:["Ghost","#6a5490"],dragon:["Dragon","#6a3ef0"],dark:["Dark","#6a5446"],
+ steel:["Steel","#8a8aaa"],fairy:["Fairy","#d6829e"]};
+const HAB={1:"caves",2:"forests",3:"grasslands",4:"mountains",5:"rare, hard-to-reach places",6:"rough terrain",7:"the sea",8:"towns and cities",9:"near the water's edge"};
+const GENS=[[1,151,"Kanto"],[152,251,"Johto"],[252,386,"Hoenn"]];
+const N=DEX.length, PAGES=["INFO","EVOLUTION"];
+/* Picture folder: put your own images in "images" named 001.png … 386.png (.gif/.jpg/.webp also work) */
+const IMG_DIR="images/", IMG_EXT=["png","gif","webp","jpg"];
+
+let state={i:0,page:0,auto:false,interval:8};
+try{Object.assign(state,JSON.parse(localStorage.getItem("dexState2")||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem("dexState2",JSON.stringify(state))}catch(e){}};
+
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(3,"0");
+const gen=i=>GENS.findIndex(g=>i+1>=g[0]&&i+1<=g[1]);
+const fmt=x=>x.toLocaleString("en-US",{maximumFractionDigits:1});
+const tn=t=>TYPES[t][0];
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const link=n=>`<span class="lk" data-go="${n-1}">${esc(DEX[n-1].n)}</span>`;
+
+function describe(p,i){
+  const g=GENS[gen(i)];
+  const tt=p.t.map(tn).join("/"), an=/^[AEIOU]/.test(tt)?"an":"a";
+  let s=`${esc(p.n)} is ${an} ${tt}-type Pokémon from the ${g[2]} region. `;
+  if(p.leg) s+="It is a Legendary Pokémon – only one exists in the games. ";
+  if(p.myth) s+="It is a Mythical Pokémon that was usually only available through special events. ";
+  if(p.baby) s+="It is a baby Pokémon that hatches from an Egg. ";
+  s+=`It stands ${fmt(p.h)} m tall and weighs ${fmt(p.w)} kg`;
+  if(p.hab) s+=`, and it usually lives in ${HAB[p.hab]}`;
+  s+=". ";
+  if(p.fr!==null) s+=`It evolves from ${link(p.fr)}${p.frc?" "+p.frc:""}. `;
+  if(p.to.length===1) s+=`It evolves into ${link(p.to[0][0])} ${p.to[0][1]}. `;
+  else if(p.to.length>1) s+=`It can evolve into ${p.to.length} different Pokémon. `;
+  else if(p.fr===null) s+="It does not evolve. ";
+  const c=p.cr; s+= c>=190?"It is very easy to catch.":c>=90?"It is fairly easy to catch.":c>=45?"It is somewhat hard to catch.":"It is very hard to catch.";
+  return s;
+}
+
+function loadImg(i){
+  const img=$("img"), ph=$("ph"), p=DEX[i], col=TYPES[p.t[0]][1];
+  ph.innerHTML=`<div class="orb" style="background:radial-gradient(circle at 35% 30%,${col}cc,${col})">?</div>
+     <div class="tip">No image – put ${pad(i+1)}.png in the "images" folder</div>`;
+  ph.style.display="flex"; img.style.display="none";
+  let k=0; const id=++loadImg.seq;
+  img.onload=()=>{ if(id!==loadImg.seq) return; img.style.display="block"; ph.style.display="none";
+    img.classList.toggle("pixel", img.naturalWidth<=128); };
+  img.onerror=()=>{ if(id!==loadImg.seq) return; if(++k<IMG_EXT.length) img.src=IMG_DIR+pad(i+1)+"."+IMG_EXT[k]; };
+  img.src=IMG_DIR+pad(i+1)+"."+IMG_EXT[0];
+}
+loadImg.seq=0;
+
+function render(){
+  const i=state.i, p=DEX[i], g=gen(i);
+  $("picno").textContent="No."+pad(i+1);
+  loadImg(i);
+  $("lcd2").innerHTML=`<div class="a">No.${pad(i+1)}</div><div class="b">${esc(p.n)}</div><div class="c">${esc(p.g)}</div>`;
+
+  let body;
+  if(state.page===0) body=`<div class="tx">${describe(p,i)}</div>`;
+  else{
+    const L=[];
+    if(p.fr!==null) L.push(`◀ From ${link(p.fr)}${p.frc?" "+p.frc:""}`);
+    p.to.forEach(([n,c])=>L.push(`▶ Into ${link(n)} ${c}`));
+    if(!L.length) L.push("No evolutions in the first 3 generations.");
+    body=`<div class="ev ${L.length>3?"many":""}">${L.map(l=>`<div>${l}</div>`).join("")}</div>`;
+  }
+  $("info").innerHTML=`<div class="hd"><span class="n">${esc(p.n)}</span><span class="g">${esc(p.g)}</span><span class="pg">${PAGES[state.page]} ${state.page+1}/${PAGES.length}</span></div>${body}`;
+
+  const tot=p.s.reduce((a,b)=>a+b,0);
+  const cells=[["HP",p.s[0]],["ATTACK",p.s[1]],["DEFENSE",p.s[2]],["SP.ATK",p.s[3]],["SP.DEF",p.s[4]],
+               ["SPEED",p.s[5]],["TOTAL",tot],["HEIGHT",fmt(p.h)+"m",1],["WEIGHT",fmt(p.w)+"kg",1],["CATCH",p.cr]];
+  $("grid").innerHTML=cells.map(([l,v,s])=>`<div><small>${l}</small><b class="${s?"s":""}">${v}</b></div>`).join("");
+
+  $("types").innerHTML=[0,1].map(k=>p.t[k]?`<div><span style="background:${TYPES[p.t[k]][1]}">${tn(p.t[k])}</span></div>`:`<div style="color:#999;font-size:12px">—</div>`).join("");
+  $("gen").innerHTML=`<div class="t">GENERATION</div><div class="v">${g+1} · ${GENS[g][2]}</div>`;
+  $("ab").innerHTML=`<div class="t">ABILITIES</div><div class="v">${p.a.map(esc).join(" / ")}</div>${p.ha.length?`<div class="h">Hidden: ${p.ha.map(esc).join(", ")}</div>`:""}`;
+
+  document.body.style.setProperty("--tc",TYPES[p.t[0]][1]);
+  $("sideL").textContent="No."+pad(i+1); $("sideR").textContent=p.n.toUpperCase();
+  [1,2,3].forEach(k=>$("led"+k).classList.toggle("on",k-1===g));
+  $("auto-dot").classList.toggle("on",state.auto);
+  save();
+}
+
+function go(j){state.i=((j%N)+N)%N; render(); flash();}
+function flash(){const g=$("lens-glow");g.classList.add("on");clearTimeout(flash.t);flash.t=setTimeout(()=>g.classList.remove("on"),220);}
+const rnd=()=>go(Math.floor(Math.random()*N));
+const page=d=>{state.page=(state.page+d+PAGES.length)%PAGES.length;render();};
+
+const on=(id,f)=>$(id).addEventListener("click",f);
+on("b-left",()=>go(state.i-1)); on("b-right",()=>go(state.i+1));
+on("b-up",()=>go(state.i-10)); on("b-down",()=>go(state.i+10));
+on("b-mid",rnd); on("b-lens",rnd); on("b-yel",rnd);
+on("b-a",()=>page(1)); on("b-p1",()=>page(-1)); on("b-p2",()=>page(1));
+on("b-g1",()=>go(0)); on("b-g2",()=>go(151)); on("b-g3",()=>go(251));
+on("b-red",()=>go(GENS[(gen(state.i)+2)%3][0]-1));
+on("b-blue",()=>go(GENS[(gen(state.i)+1)%3][0]-1));
+on("b-auto",()=>{state.auto=!state.auto;render();restartAuto();});
+document.addEventListener("click",e=>{const t=e.target.closest("[data-go]"); if(t) go(+t.dataset.go);});
+document.addEventListener("wheel",e=>go(state.i+(e.deltaY>0?1:-1)),{passive:true});
+document.addEventListener("keydown",e=>{
+  const k={ArrowRight:1,ArrowLeft:-1,ArrowDown:10,ArrowUp:-10}[e.key];
+  if(k) go(state.i+k); else if(e.key==="a"||e.key==="Enter") page(1);
+});
+
+let timer=null;
+function restartAuto(){clearInterval(timer); if(state.auto) timer=setInterval(()=>go(state.i+1),state.interval*1000);}
+
+let scaleMax=0.94;
+function fit(){
+  const s=Math.min(innerWidth*scaleMax/1345, innerHeight*scaleMax/960);
+  $("dev").style.transform=`scale(${s})`;
+  $("wrap").style.width=1345*s+"px"; $("wrap").style.height=960*s+"px";
+}
+addEventListener("resize",fit);
+
+/* Lively Wallpaper customise panel */
+window.livelyPropertyListener=function(name,val){
+  if(name==="size"){scaleMax=Math.max(.3,Math.min(1,val/100));fit();}
+  if(name==="autoplay"){state.auto=!!val;render();restartAuto();}
+  if(name==="interval"){state.interval=Math.max(2,+val);restartAuto();}
+  if(name==="randomStart"&&val) rnd();
+  if(name==="bgAnim"){fxOn=!!val;document.body.classList.toggle("still",!fxOn);}
+};
+
+/* floating particles */
+let fxOn=true;
+(function(){
+  const c=$("fx"), x=c.getContext("2d"); let W,H,P=[],last=0;
+  const size=()=>{W=c.width=innerWidth;H=c.height=innerHeight;
+    P=Array.from({length:Math.round(W*H/26000)},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+.4,
+      v:Math.random()*.35+.08,w:Math.random()*Math.PI*2,a:Math.random()*.6+.2,t:Math.random()<.45}))};
+  size(); addEventListener("resize",size);
+  function frame(ts){
+    requestAnimationFrame(frame);
+    if(!fxOn||document.hidden||ts-last<33) return; last=ts;
+    const tc=getComputedStyle(document.body).getPropertyValue("--tc").trim()||"#fff";
+    x.clearRect(0,0,W,H);
+    for(const p of P){
+      p.y-=p.v; p.w+=.01; p.x+=Math.sin(p.w)*.25;
+      if(p.y<-5){p.y=H+5;p.x=Math.random()*W;}
+      x.globalAlpha=p.a*(.6+.4*Math.sin(p.w*3));
+      x.fillStyle=p.t?tc:"#cfe8ff"; x.shadowColor=x.fillStyle; x.shadowBlur=8;
+      x.beginPath(); x.arc(p.x,p.y,p.r,0,7); x.fill();
+    }
+  }
+  requestAnimationFrame(frame);
+})();
+
+["pic","lcd2","info","grid","gen","ab"].forEach(id=>{
+  const e=$(id), g=document.createElement("div"); g.className="gloss";
+  const cs=getComputedStyle(e);
+  Object.assign(g.style,{left:e.offsetLeft+"px",top:e.offsetTop+"px",width:e.offsetWidth+"px",height:e.offsetHeight+"px",borderRadius:cs.borderRadius||"6px"});
+  if(id==="grid") g.style.borderRadius="4px";
+  $("dev").appendChild(g);
+});
+fit(); render(); restartAuto();
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+  "size": {
+    "type": "slider",
+    "value": 94,
+    "text": "Size (%)",
+    "min": 40,
+    "max": 100,
+    "step": 1
+  },
+  "autoplay": {
+    "type": "checkbox",
+    "value": false,
+    "text": "Autoplay"
+  },
+  "interval": {
+    "type": "slider",
+    "value": 8,
+    "text": "Seconds per Pokémon",
+    "min": 2,
+    "max": 60,
+    "step": 1
+  },
+  "randomStart": {
+    "type": "button",
+    "value": "Random",
+    "text": "Jump to a random Pokémon"
+  },
+  "bgAnim": {
+    "type": "checkbox",
+    "value": true,
+    "text": "Animated background"
+  }
+}
